@@ -1,0 +1,27 @@
+FROM ubuntu:mantic-20231011
+
+# Install all the thingsi
+RUN apt update -y && apt upgrade -y && apt install -y zsh git curl vim sudo openssh-server zip cmake net-tools build-essential ninja-build maven locate
+RUN apt install -y libllvm-16-ocaml-dev libllvm16 llvm-16 llvm-16-dev llvm-16-doc llvm-16-examples llvm-16-runtime
+RUN apt install -y clang-16 clang-tools-16 clang-16-doc libclang-common-16-dev libclang-16-dev libclang1-16 clang-format-16 python3-clang-16 clangd-16 clang-tidy-16
+RUN apt install -y libclang-rt-16-dev
+
+# Configure SSHD.
+RUN echo 'root:temp' | chpasswd
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+ENV NOTVISIBLE "in users profile"
+RUN echo "export VISIBLE=now" >> /etc/profile
+
+# Setup cli
+RUN chsh -s $(which zsh)
+RUN useradd -m julian
+RUN echo 'julian:temp' | chpasswd
+RUN usermod -aG sudo julian
+RUN cp /etc/zsh/newuser.zshrc.recommended /home/julian/.zshrc
+RUN echo "export CC=/usr/bin/clang" > .zshrc
+RUN echo "export CXX=/usr/bin/clang++" > .zshrc
+
+EXPOSE 22
+ENTRYPOINT service ssh restart && bash
+
