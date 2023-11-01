@@ -20,5 +20,5 @@ I'm using Idea's CLion, which features a mode to allow the IDE to be used on rem
 
 After you start the instance, be sure to change your password with a call to passwd.
 
-There is one caveat, and that is when ever you update the operating system or otherwise change the filesystem outside of your attached source volume, you will need to commit that version of the container to an image before shutting it down.  When restarting, you'll use  the updated image.  If you stop your container without committing the image, you'll lose everything that happened in the interrim.  Your work will be fine on the attached volume, but any changes to the os, including installations (make install / cmake --target install / etc) will be lost.
+There is one caveat, and that is when ever you update the operating system or otherwise change the filesystem outside of your attached source volume, you will need to commit that version of the container to an image before shutting it down.  When restarting, you'll use  the updated image.  If you stop your container without committing the image, you'll lose everything that happened in the interrim.  Your work will be fine on the attached volume, but any changes to the os, including installations (make install / cmake --target install / apt install / etc) will be lost.
  
